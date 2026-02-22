@@ -103,7 +103,7 @@ def mostrar_resumen(materias: List[str], calificaciones: List[float]) -> None:
     """
     Muestra un resumen completo de todas las materias y estadísticas.
     """
-    UMbral = 5.0  # Umbral de aprobación
+    UMBRAL = 5.0  # Umbral de aprobación
 
     print("\n" + "=" * 50)
     print("RESUMEN DE CALIFICACIONES")
@@ -124,16 +124,16 @@ def mostrar_resumen(materias: List[str], calificaciones: List[float]) -> None:
     print(f"  Promedio: {promedio:.2f}")
 
     # Determinar estado (mostrando umbral explícitamente)
-    indice_aprobados, indice_reprobados = determinar_estado(calificaciones, UMbral)
+    indice_aprobados, indice_reprobados = determinar_estado(calificaciones, UMBRAL)
 
-    print(f"\n--- Materias Aprobadas (umbral >= {UMbral}) ---")
+    print(f"\n--- Materias Aprobadas (umbral >= {UMBRAL}) ---")
     if indice_aprobados:
         for i in indice_aprobados:
             print(f"  - {materias[i]}: {calificaciones[i]:.2f}")
     else:
         print("  Ninguna")
 
-    print(f"\n--- Materias Reprobadas (umbral < {UMbral}) ---")
+    print(f"\n--- Materias Reprobadas (umbral < {UMBRAL}) ---")
     if indice_reprobados:
         for i in indice_reprobados:
             print(f"  - {materias[i]}: {calificaciones[i]:.2f}")
