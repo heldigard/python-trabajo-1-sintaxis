@@ -4,7 +4,7 @@ Programa que permite ingresar materias y calificaciones, calcular promedio,
 determinar estado (aprobado/reprobado) y encontrar extremos.
 """
 
-from typing import Tuple, List
+from typing import Tuple, List, Optional
 
 
 def ingresar_calificaciones() -> Tuple[List[str], List[float]]:
@@ -44,9 +44,14 @@ def ingresar_calificaciones() -> Tuple[List[str], List[float]]:
         materias.append(nombre)
         calificaciones.append(calificacion)
 
-        # Preguntar si continuar
-        continuar = input("¿Desea agregar otra materia? (s/n): ").strip().lower()
-        if continuar != "s" and continuar != "si":
+        # Preguntar si continuar con validación
+        while True:
+            continuar = input("¿Desea agregar otra materia? (s/n): ").strip().lower()
+            if continuar in ("s", "si", "n", "no"):
+                break
+            print("Error: Responda 's' para sí o 'n' para no.")
+
+        if continuar in ("n", "no"):
             break
 
     return materias, calificaciones
@@ -64,8 +69,8 @@ def calcular_promedio(calificaciones: List[float]) -> float:
 
 def determinar_estado(calificaciones: List[float], umbral: float = 5.0) -> Tuple[List[int], List[int]]:
     """
-    Determina qué materias están aprobadas y reprobadas.
-    Retorna dos listas de índices: aprobados y reprobados.
+    Determina qué materias están aprobadas y reprobadas según el umbral.
+    Retorna dos listas de ÍNDICES (no nombres): aprobados y reprobados.
     """
     aprobados = []
     reprobados = []
@@ -79,13 +84,14 @@ def determinar_estado(calificaciones: List[float], umbral: float = 5.0) -> Tuple
     return aprobados, reprobados
 
 
-def encontrar_extremos(calificaciones: List[float]) -> Tuple[int, int]:
+def encontrar_extremos(calificaciones: List[float]) -> Tuple[Optional[int], Optional[int]]:
     """
     Encuentra el índice de la calificación más alta y la más baja.
     Retorna una tupla con (índice_máximo, índice_mínimo).
+    Retorna (None, None) si la lista está vacía.
     """
     if not calificaciones:
-        return -1, -1
+        return None, None
 
     indice_max = calificaciones.index(max(calificaciones))
     indice_min = calificaciones.index(min(calificaciones))
@@ -97,6 +103,8 @@ def mostrar_resumen(materias: List[str], calificaciones: List[float]) -> None:
     """
     Muestra un resumen completo de todas las materias y estadísticas.
     """
+    UMbral = 5.0  # Umbral de aprobación
+
     print("\n" + "=" * 50)
     print("RESUMEN DE CALIFICACIONES")
     print("=" * 50)
@@ -115,17 +123,17 @@ def mostrar_resumen(materias: List[str], calificaciones: List[float]) -> None:
     print(f"\n--- Promedio General ---")
     print(f"  Promedio: {promedio:.2f}")
 
-    # Determinar estado
-    indice_aprobados, indice_reprobados = determinar_estado(calificaciones)
+    # Determinar estado (mostrando umbral explícitamente)
+    indice_aprobados, indice_reprobados = determinar_estado(calificaciones, UMbral)
 
-    print(f"\n--- Materias Aprobadas ({len(indice_aprobados)}) ---")
+    print(f"\n--- Materias Aprobadas (umbral >= {UMbral}) ---")
     if indice_aprobados:
         for i in indice_aprobados:
             print(f"  - {materias[i]}: {calificaciones[i]:.2f}")
     else:
         print("  Ninguna")
 
-    print(f"\n--- Materias Reprobadas ({len(indice_reprobados)}) ---")
+    print(f"\n--- Materias Reprobadas (umbral < {UMbral}) ---")
     if indice_reprobados:
         for i in indice_reprobados:
             print(f"  - {materias[i]}: {calificaciones[i]:.2f}")
