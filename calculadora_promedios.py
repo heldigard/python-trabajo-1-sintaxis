@@ -143,6 +143,10 @@ def mostrar_resumen(materias: List[str], calificaciones: List[float]) -> None:
     # Encontrar extremos
     indice_max, indice_min = encontrar_extremos(calificaciones)
 
+    # Usar valores por defecto si son None (no debería ocurrir)
+    indice_max = indice_max if indice_max is not None else 0
+    indice_min = indice_min if indice_min is not None else 0
+
     print(f"\n--- Mejor Calificación ---")
     print(f"  {materias[indice_max]}: {calificaciones[indice_max]:.2f}")
 
